@@ -1,0 +1,165 @@
+---
+title: "STAT 3080 — Project Part 1"
+author: "Team Name Here"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  pdf_document:
+    toc: false
+    number_sections: false
+fontsize: 11pt
+geometry: margin=1in
+---
+
+<!-- IMPORTANT: Per the announcement, make sure this exact `.Rmd` file lives in your team repository. 
+Also add your team repo URL in the **References** section (not as a raw file URL). -->
+<!-- Knit this file **directly to PDF** without altering the provided formatting/organization. -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(knitr)
+# kableExtra is optional; comment out if unavailable on your machine
+suppressWarnings(suppressMessages(library(kableExtra)))
+```
+
+# Introduction
+
+Briefly introduce your **topic** (what/why it matters beyond personal interest, 4–6 sentences).  
+State the **scope** (time frame ≤ last 5 years, geography, unit of analysis).
+
+## Research Questions
+
+Clearly list **exactly three** specific and testable questions (bold or bullets). Each question should target **one or two parameters** (center, spread, proportion, etc.) suitable for a **single stand‑alone test in Part 2** (no regression / time‑series / predictive models). Example format:
+
+- **RQ1.** Was *X* higher for Group A than Group B in YEAR / PERIOD?
+- **RQ2.** Did the proportion of *Y* exceed *p₀* in YEAR / PERIOD?
+- **RQ3.** Was the mean of *Z* different between Condition 1 and Condition 2 in YEAR / PERIOD?
+
+Briefly (1–2 sentences each) explain the **relevance** of the three questions.
+
+# Data summary
+
+Describe your **data collection** and **primary sources** (≥2 primary sources total; each RQ uses variables from **at least two** primary sources). Include:
+
+- What the sources are and **why they’re trustworthy**.  
+- Whether your data are a **population** or a **sample**, and how sampled/selected.  
+- Any **cleaning / modifications** and the reasons.  
+- Potential **issues/biases** and expected impact.  
+- A short mapping of **which variables** answer each RQ and **why appropriate**.
+
+> **Reminder (Announcements):** Include your **team repo URL** in **References**, and for the dataset include the **original download/scrape URL** (not the raw file URL from your repo).
+
+## Load data
+
+Replace the path(s) below with your cleaned CSV(s). Keep raw data files in your repo as well.
+
+```{r load-data}
+# Example: load two primary-source files and join them for analysis.
+# Update file names/keys as needed.
+# data_src1 <- readr::read_csv("data/source1.csv")
+# data_src2 <- readr::read_csv("data/source2.csv")
+# joined <- data_src1 %>% 
+#   inner_join(data_src2, by = c("key_var1" = "key_var2"))
+# For the rest of the report, refer to the analysis data frame name you actually use:
+# analysis_df <- joined
+```
+
+# Data dictionary
+
+Provide a concise table with **variable names as used in this report** (may differ from column names), **definitions**, **units**, and **all categories** for categorical variables.
+
+```{r data-dictionary, eval=FALSE}
+# FILL THIS IN: create a tibble that describes your variables.
+data_dictionary <- tibble::tibble(
+  variable_name = c("var1", "var2", "group", "period"),
+  description   = c("Outcome measure (units)", 
+                    "Secondary measure (units)", 
+                    "Group indicator (A/B definition)", 
+                    "Time period definition (e.g., YYYY‑MM)")
+)
+
+kable(data_dictionary, caption = "Data dictionary") %>%
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+# Data exploration
+
+Select up to **8 summaries** total (≥2 numerical, ≥2 graphical, ≥1 per RQ). All but one per type must be **more complex than simple counts**. Create all graphics in **ggplot2** and carefully **label titles/axes/notes**.
+
+## Example numerical summaries
+
+```{r numerical-summaries, eval=FALSE}
+# Example: group-wise means/SDs
+# analysis_df %>% 
+#   group_by(group) %>% 
+#   summarise(
+#     mean_outcome = mean(var1, na.rm = TRUE),
+#     sd_outcome   = sd(var1, na.rm = TRUE),
+#     n            = dplyr::n()
+#   ) %>%
+#   kable(caption = "Group-wise summary of var1") %>%
+#   kableExtra::kable_styling(full_width = FALSE)
+#
+# Example: two-parameter table by period
+# analysis_df %>% 
+#   group_by(period) %>% 
+#   summarise(
+#     mean_var1 = mean(var1, na.rm = TRUE),
+#     sd_var1   = sd(var1, na.rm = TRUE),
+#     prop_A    = mean(group == "A", na.rm = TRUE)
+#   ) %>%
+#   kable(caption = "Period summaries of key parameters") %>%
+#   kableExtra::kable_styling(full_width = FALSE)
+```
+
+## Example graphical summaries
+
+```{r plots, eval=FALSE, fig.height=3.5, fig.width=6}
+# Histogram / density
+# ggplot(analysis_df, aes(x = var1)) +
+#   geom_histogram(binwidth = 5) +
+#   labs(title = "Distribution of var1", x = "var1 (units)", y = "Count",
+#        caption = "Note: binwidth illustrative; adjust per data.") +
+#   theme_minimal()
+
+# Boxplot by group
+# ggplot(analysis_df, aes(x = group, y = var1)) +
+#   geom_boxplot() +
+#   labs(title = "var1 by group", x = "Group", y = "var1 (units)") +
+#   theme_minimal()
+
+# Line plot over time (if applicable)
+# ggplot(analysis_df, aes(x = period, y = var1, group = 1)) +
+#   geom_line() + geom_point() +
+#   labs(title = "var1 over time", x = "Period", y = "var1 (units)") +
+#   theme_minimal()
+```
+
+## Tie each summary to an RQ
+
+After each table/figure, add 1–2 sentences explaining what it shows and **which RQ** it informs.
+
+# Conclusions
+
+Provide a **clear narrative** that interprets the displayed summaries (values/patterns/trends) and what they **may imply** for the topic.  
+State which **one** of your RQs appears **most interesting** to analyze in **Part 2** and why.  
+**Do not** do inferential testing here.
+
+# Data appendix
+
+Begin on a **new page**. Show a readable table of the **first 10–20 rows** of the analysis data.
+
+```{r appendix, eval=FALSE}
+# analysis_df %>% head(20) %>% 
+#   kable(caption = "First 20 rows of analysis data") %>%
+#   kableExtra::kable_styling(full_width = FALSE)
+```
+
+# References
+
+Use any standard format (APA/MLA/etc.). Start on a **new page**. Include both **background** sources and **primary data sources**. In the report body, add inline citations where appropriate.
+
+- Team repository URL: <https://github.com/your-org/your-repo>  <!-- Use your repo homepage URL (not a raw file URL) -->
+- Primary Source 1 (original download page): <https://...>
+- Primary Source 2 (original download page): <https://...>
+- Additional background refs...
